@@ -16,8 +16,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.emqtt.emqandroidtoolkit.R;
 import io.emqtt.emqandroidtoolkit.model.Connection;
+import io.emqtt.emqandroidtoolkit.model.Subscription;
+import io.emqtt.emqandroidtoolkit.net.MQTTManager;
 import io.emqtt.emqandroidtoolkit.ui.OnItemClickListener;
 import io.emqtt.emqandroidtoolkit.ui.activity.DashboardActivity;
+import io.emqtt.emqandroidtoolkit.util.RealmHelper;
 
 /**
  * ClassName: ConnectionAdapter
@@ -85,15 +88,11 @@ public class ConnectionAdapter extends RecyclerView.Adapter<ConnectionAdapter.Co
 
                         return true;
                     case R.id.action_delete:
-                        if (mOnItemClickListener != null) {
-                            mOnItemClickListener.onItemDelete(position, connection);
-                        }
-
-                        mConnectionList.remove(position);
+                        MQTTManager.getInstance().removeClient(connection.getId());
+                        RealmHelper.getInstance().deleteTopic(Subscription.class,connection.getId());
+                        RealmHelper.getInstance().delete(connection);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, getItemCount());
-
-
                         return true;
                     default:
                         return false;

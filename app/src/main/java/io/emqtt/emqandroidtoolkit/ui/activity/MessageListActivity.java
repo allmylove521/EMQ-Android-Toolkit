@@ -23,6 +23,7 @@ import io.emqtt.emqandroidtoolkit.ui.adapter.MessageAdapter;
 import io.emqtt.emqandroidtoolkit.ui.base.ToolBarActivity;
 import io.emqtt.emqandroidtoolkit.ui.widget.RecyclerViewDivider;
 import io.emqtt.emqandroidtoolkit.util.RealmHelper;
+import io.emqtt.emqandroidtoolkit.util.StringUtil;
 import io.realm.RealmResults;
 
 public class MessageListActivity extends ToolBarActivity {
@@ -35,7 +36,7 @@ public class MessageListActivity extends ToolBarActivity {
     private Subscription mSubscription;
 
     private boolean mIsDelete;
-    private long mDeleteTime;
+    private String mDeleteTime;
 
 
     public static void openActivity(Context context, Subscription subscription){
@@ -101,7 +102,7 @@ public class MessageListActivity extends ToolBarActivity {
             RealmHelper.getInstance().deleteTopicMessage(EmqMessage.class, mSubscription.getTopic());
             mAdapter.deleteAll();
             mIsDelete = true;
-            mDeleteTime = System.currentTimeMillis();
+            mDeleteTime = StringUtil.formatNow();
             return true;
         }
 

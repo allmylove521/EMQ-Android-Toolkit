@@ -8,9 +8,9 @@ import io.emqtt.emqandroidtoolkit.model.EmqMessage;
 public class DeleteTopicMessageEvent {
 
     private EmqMessage message;
-    private long deleteTime;
+    private String deleteTime;
 
-    public DeleteTopicMessageEvent(EmqMessage message, long deleteTime) {
+    public DeleteTopicMessageEvent(EmqMessage message, String deleteTime) {
         this.message = message;
         this.deleteTime = deleteTime;
     }
@@ -19,7 +19,7 @@ public class DeleteTopicMessageEvent {
         return message;
     }
 
-    public long getDeleteTime() {
+    public String getDeleteTime() {
         return deleteTime;
     }
 }

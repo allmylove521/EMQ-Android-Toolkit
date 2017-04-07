@@ -110,6 +110,20 @@ public class RealmHelper {
         });
     }
 
+    public <T extends RealmObject> void deleteTopic(Class<T> clazz, String id) {
+        final RealmResults results = mRealm.where(clazz)
+                .equalTo("connectionId", id)
+                .findAll();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                results.deleteAllFromRealm();
+
+            }
+        });
+    }
+
+
     public Realm getRealm() {
         return mRealm;
     }

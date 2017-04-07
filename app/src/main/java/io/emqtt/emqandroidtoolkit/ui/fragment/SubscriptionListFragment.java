@@ -106,7 +106,7 @@ public class SubscriptionListFragment extends BaseFragment {
         DeleteTopicMessageEvent deleteTopicMessageEvent = EventBus.getDefault().getStickyEvent(DeleteTopicMessageEvent.class);
         MessageEvent messageEvent = EventBus.getDefault().getStickyEvent(MessageEvent.class);
         if (deleteTopicMessageEvent != null & messageEvent != null) {
-            long deleteTime = deleteTopicMessageEvent.getDeleteTime();
+            long deleteTime = StringUtil.getTimeStamp(deleteTopicMessageEvent.getDeleteTime());
             long messageTime = StringUtil.getTimeStamp(messageEvent.getMessage().getUpdateTime());
             if (deleteTime > messageTime) {
                 updateMessage(deleteTopicMessageEvent.getMessage());

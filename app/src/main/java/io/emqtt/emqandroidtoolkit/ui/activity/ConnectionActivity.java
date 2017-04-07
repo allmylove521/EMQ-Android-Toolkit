@@ -9,6 +9,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.emqtt.emqandroidtoolkit.R;
@@ -39,6 +42,8 @@ public class ConnectionActivity extends ToolBarActivity {
 
     private int mMode;
 
+    private String mId;
+
     private Connection mConnection;
 
     @IntDef({MODE_ADD, MODE_EDIT})
@@ -46,12 +51,6 @@ public class ConnectionActivity extends ToolBarActivity {
 
     }
 
-    public static void openActivity(Context context, @mode int mode) {
-        Intent intent = new Intent(context, ConnectionActivity.class);
-        intent.putExtra(EXTRA_MODE, mode);
-        context.startActivity(intent);
-
-    }
 
     public static void openActivityForResult(Context context, @mode int mode, int requestCode) {
         openActivityForResult(context, mode, requestCode, null);
@@ -82,7 +81,10 @@ public class ConnectionActivity extends ToolBarActivity {
             mClientId.setText(getRandomClientId());
         } else {
             mOperateConnectionButton.setText(R.string.save_connection);
-            mConnection = getIntent().getParcelableExtra(EXTRA_CONNECTION);
+            Connection connection = getIntent().getParcelableExtra(EXTRA_CONNECTION);
+            mId = connection.getId();
+            Realm realm = RealmHelper.getInstance().getRealm();
+            mConnection = realm.where(Connection.class).equalTo("id", mId).findFirst();
             setConnection(mConnection);
 
         }
@@ -94,7 +96,6 @@ public class ConnectionActivity extends ToolBarActivity {
         int randNum = (int) (Math.random() * 99999);
         return "EMQ-" + randNum;
     }
-
 
 
     @Override
@@ -119,14 +120,21 @@ public class ConnectionActivity extends ToolBarActivity {
             return;
         }
 
+        String srvURI = "tcp://" + mHost.getText().toString() + ":" + mPort.getText().toString();
+        try {
+            validateURI(srvURI);
+        } catch (IllegalArgumentException e) {
+            TipUtil.showSnackbar(mLinearLayout, "IllegalArgumentException:" + srvURI);
+            return;
+        }
+
 
         if (!isAddMode()) {
             Realm realm = RealmHelper.getInstance().getRealm();
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    Connection connection = realm.where(Connection.class).equalTo("id", mConnection.getId()).findFirst();
-                    mConnection = updateConnection(connection);
+                    updateConnection(mConnection);
 
                 }
             });
@@ -152,7 +160,8 @@ public class ConnectionActivity extends ToolBarActivity {
         mPassword.setText(connection.getPassword());
     }
 
-    private Connection updateConnection(Connection connection) {
+
+    private void updateConnection(Connection connection) {
         String host = mHost.getText().toString().trim();
         String port = mPort.getText().toString().trim();
         String clientId = mClientId.getText().toString().trim();
@@ -167,12 +176,41 @@ public class ConnectionActivity extends ToolBarActivity {
         connection.setUsername(username);
         connection.setPassword(password);
         connection.generateId();
-        return connection;
     }
 
 
     private boolean isAddMode() {
         return mMode == MODE_ADD;
+    }
+
+    /**
+     * Validate a URI
+     */
+
+    public static boolean validateURI(String srvURI) {
+        try {
+            URI vURI = new URI(srvURI);
+            if (vURI.getScheme().equals("ws")) {
+                return true;
+            } else if (vURI.getScheme().equals("wss")) {
+                return true;
+            }
+
+            if (!vURI.getPath().equals("")) {
+                throw new IllegalArgumentException(srvURI);
+            }
+            if (vURI.getScheme().equals("tcp")) {
+                return true;
+            } else if (vURI.getScheme().equals("ssl")) {
+                return true;
+            } else if (vURI.getScheme().equals("local")) {
+                return true;
+            } else {
+                throw new IllegalArgumentException(srvURI);
+            }
+        } catch (URISyntaxException ex) {
+            throw new IllegalArgumentException(srvURI);
+        }
     }
 
 }

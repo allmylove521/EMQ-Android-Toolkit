@@ -212,4 +212,11 @@ public class MQTTManager {
     public MqttAsyncClient getClient(String id) {
         return mHashMap.get(id);
     }
+
+    public void removeClient(String id) {
+        if (getClient(id) != null) {
+            disconnect(getClient(id));
+            mHashMap.remove(id);
+        }
+    }
 }

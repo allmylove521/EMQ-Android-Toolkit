@@ -9,9 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.emqtt.emqandroidtoolkit.R;
@@ -37,7 +34,6 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.connection) RecyclerView mConnectionRecyclerView;
     @BindView(R.id.fab) FloatingActionButton mFab;
 
-    private List<Connection> mConnectionList;
     private ConnectionAdapter mConnectionAdapter;
 
     private int mPosition;
@@ -61,13 +57,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void setUpData() {
 
-        mConnectionList = new ArrayList<>();
         mConnectionResults = RealmHelper.getInstance().queryAll(Connection.class);
-        if (mConnectionResults != null) {
-            mConnectionList.addAll(mConnectionResults);
-        }
 
-        mConnectionAdapter = new ConnectionAdapter(mConnectionList);
+        mConnectionAdapter = new ConnectionAdapter(mConnectionResults);
         mConnectionAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemEdit(int position, Object item) {
@@ -78,7 +70,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onItemDelete(int position, Object item) {
-                RealmHelper.getInstance().delete(mConnectionResults.get(position));
+//                RealmHelper.getInstance().delete(mConnectionResults.get(position));
 
             }
         });
@@ -94,11 +86,9 @@ public class MainActivity extends BaseActivity {
             if (null != connection) {
                 switch (requestCode) {
                     case REQUEST_ADD:
-                        mConnectionList.add(connection);
-                        mConnectionAdapter.notifyItemInserted(mConnectionList.size() - 1);
+                        mConnectionAdapter.notifyItemInserted(mConnectionResults.size() - 1);
                         break;
                     case REQUEST_EDIT:
-                        mConnectionList.set(mPosition, connection);
                         mConnectionAdapter.notifyItemChanged(mPosition);
                         break;
                 }
