@@ -106,10 +106,12 @@ public class ConnectionActivity extends ToolBarActivity {
 
     @OnClick(R.id.operate_connection)
     public void onClick() {
+
         if (mHost.getText().toString().isEmpty()) {
             TipUtil.showSnackbar(mLinearLayout, "Host cannot be empty");
             return;
         }
+
         if (mClientId.getText().toString().isEmpty()) {
             TipUtil.showSnackbar(mLinearLayout, "Client Id cannot be empty");
             return;
