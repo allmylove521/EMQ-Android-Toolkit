@@ -156,14 +156,14 @@ public class DashboardActivity extends BaseActivity implements SubscriptionListF
         }
 
         if (resultCode == RESULT_OK) {
-            if (requestCode == SUBSCRIPTION) {
-                Subscription subscription = data.getParcelableExtra(Constant.ExtraConstant.EXTRA_SUBSCRIPTION);
-                subscription.setConnectionId(mConnection.getId());
-                mSubscription = subscription;
-                RealmHelper.getInstance().addSubscription(mSubscription);
-                subscribe(subscription);
-
-            }
+//            if (requestCode == SUBSCRIPTION) {
+//                Subscription subscription = data.getParcelableExtra(Constant.ExtraConstant.EXTRA_SUBSCRIPTION);
+//                subscription.setConnectionId(mConnection.getId());
+//                mSubscription = subscription;
+//                RealmHelper.getInstance().addSubscription(mSubscription);
+//                subscribe(subscription);
+//
+//            }
             if (requestCode == PUBLICATION) {
                 Publication publication = data.getParcelableExtra(Constant.ExtraConstant.EXTRA_PUBLICATION);
                 mPublication = publication;

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/space_small"
-                android:orientation="vertical"
-                android:background="?android:attr/selectableItemBackground">
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/space_small"
+        android:orientation="vertical"
+        android:background="?android:attr/selectableItemBackground">
 
     <TextView
             android:id="@+id/client_id"
@@ -30,8 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_toStartOf="@+id/more"
             android:layout_centerVertical="true"
-            android:background="@drawable/dot_connected"
-    />
+            android:background="@drawable/dot_connected"/>
 
     <ImageView
             android:id="@+id/more"
@@ -40,7 +40,6 @@
             android:layout_centerVertical="true"
             android:scaleType="centerInside"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_more_vert_grey_500_24dp"
-    />
+            android:src="@drawable/ic_more_vert_grey_500_24dp"/>
 
 </RelativeLayout>

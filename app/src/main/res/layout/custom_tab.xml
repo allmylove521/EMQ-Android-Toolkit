@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="@drawable/tab_bg"
             android:textAppearance="@style/TextAppearance.Design.Tab"
+            android:textColor="@drawable/tab_bg"
     />
 
     <ImageView
             android:id="@+id/status"
+            android:visibility="invisible"
             android:layout_width="@dimen/space_small"
             android:layout_height="@dimen/space_small"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:visibility="invisible"
-            android:background="@drawable/dot_message"/>
+            android:background="@drawable/dot_message"
+            android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>

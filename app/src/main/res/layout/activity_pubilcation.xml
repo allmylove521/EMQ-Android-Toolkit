@@ -18,12 +18,13 @@
             android:paddingTop="@dimen/space_middle"
             android:orientation="vertical">
 
-        <RelativeLayout android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <android.support.design.widget.TextInputLayout
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
                 <EditText
                         android:id="@+id/topic"
                         android:layout_width="match_parent"
@@ -34,9 +35,9 @@
             </android.support.design.widget.TextInputLayout>
             <Spinner
                     android:id="@+id/spinner"
-                    android:layout_alignParentEnd="true"
                     android:layout_width="48dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"/>
         </RelativeLayout>
 
 
@@ -60,8 +61,7 @@
                 android:id="@+id/retained"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/retained"
-        />
+                android:text="@string/retained"/>
 
 
         <Button android:id="@+id/btn_publish"
