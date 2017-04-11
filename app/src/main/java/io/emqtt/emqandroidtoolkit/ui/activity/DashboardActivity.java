@@ -2,6 +2,7 @@ package io.emqtt.emqandroidtoolkit.ui.activity;
 
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -35,13 +36,14 @@ import io.emqtt.emqandroidtoolkit.net.MQTTManager;
 import io.emqtt.emqandroidtoolkit.ui.adapter.ConnectionViewPagerAdapter;
 import io.emqtt.emqandroidtoolkit.ui.base.BaseActivity;
 import io.emqtt.emqandroidtoolkit.ui.fragment.PublicationListFragment;
+import io.emqtt.emqandroidtoolkit.ui.fragment.SubscriptionFragment;
 import io.emqtt.emqandroidtoolkit.ui.fragment.SubscriptionListFragment;
 import io.emqtt.emqandroidtoolkit.util.RealmHelper;
 import io.emqtt.emqandroidtoolkit.util.TipUtil;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class DashboardActivity extends BaseActivity implements SubscriptionListFragment.OnListFragmentInteractionListener {
+public class DashboardActivity extends BaseActivity implements SubscriptionListFragment.OnListFragmentInteractionListener ,SubscriptionFragment.OnAddSubscriptionListener{
 
     private static final int SUBSCRIPTION = 63;
 
@@ -134,6 +136,20 @@ public class DashboardActivity extends BaseActivity implements SubscriptionListF
     }
 
     @Override
+    public void onAddSubscription(Subscription subscription) {
+        try {
+            MqttTopic.validate(subscription.getTopic(),true);
+        }catch (IllegalArgumentException e){
+            TipUtil.showSnackbar(mCoordinatorLayout,e.getMessage());
+            return;
+        }
+        subscription.setConnectionId(mConnection.getId());
+        mSubscription = subscription;
+        RealmHelper.getInstance().addSubscription(mSubscription);
+        subscribe(subscription);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (!EventBus.getDefault().isRegistered(this)){
             EventBus.getDefault().register(this);
@@ -205,8 +221,10 @@ public class DashboardActivity extends BaseActivity implements SubscriptionListF
         }
 
         if (mCurrentMode == SUBSCRIPTION) {
-            startActivityForResult(SubscriptionActivity.class, SUBSCRIPTION);
-        }else if (mCurrentMode == PUBLICATION){
+//            startActivityForResult(SubscriptionActivity.class, SUBSCRIPTION);
+            SubscriptionFragment subscriptionFragment = new SubscriptionFragment();
+            subscriptionFragment.show(getFragmentManager(), "Subscription");
+        } else if (mCurrentMode == PUBLICATION) {
             startActivityForResult(PublicationActivity.class, PUBLICATION);
         }
 

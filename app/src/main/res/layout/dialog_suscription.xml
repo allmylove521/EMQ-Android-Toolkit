@@ -10,25 +10,22 @@
         android:paddingTop="@dimen/space_middle">
 
 
-
-
-        <android.support.design.widget.TextInputLayout
+    <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <EditText
+                android:id="@+id/topic"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            <EditText
-                    android:id="@+id/topic"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:hint="@string/topic"/>
-        </android.support.design.widget.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/topic"/>
+    </android.support.design.widget.TextInputLayout>
 
 
-
-        <io.emqtt.emqandroidtoolkit.ui.widget.QoSChooseLayout
-                android:id="@+id/qos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+    <io.emqtt.emqandroidtoolkit.ui.widget.QoSChooseLayout
+            android:id="@+id/qos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
 
 </LinearLayout>
