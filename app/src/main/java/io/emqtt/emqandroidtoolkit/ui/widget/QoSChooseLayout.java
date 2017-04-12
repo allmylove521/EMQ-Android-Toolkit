@@ -22,6 +22,7 @@ public class QoSChooseLayout extends LinearLayout {
 
     RadioGroup mRadioGroup;
 
+
     private int QoS;
 
 
@@ -51,10 +52,20 @@ public class QoSChooseLayout extends LinearLayout {
             }
         });
 
-        ((RadioButton)findViewById(R.id.qos1)).setChecked(true);
+        ((RadioButton) findViewById(R.id.qos1)).setChecked(true);
     }
 
     public int getQoS() {
         return QoS;
+    }
+
+    public void setQoS(int qos) {
+        if (qos == QoSConstant.AT_MOST_ONCE) {
+            mRadioGroup.check(R.id.qos0);
+        } else if (qos == QoSConstant.AT_LEAST_ONCE) {
+            mRadioGroup.check(R.id.qos1);
+        } else if (qos == QoSConstant.EXACTLY_ONCE) {
+            mRadioGroup.check(R.id.qos2);
+        }
     }
 }

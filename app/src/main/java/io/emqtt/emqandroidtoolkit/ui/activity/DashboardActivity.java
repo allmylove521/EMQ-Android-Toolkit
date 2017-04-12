@@ -1,7 +1,6 @@
 package io.emqtt.emqandroidtoolkit.ui.activity;
 
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -442,9 +441,7 @@ public class DashboardActivity extends BaseActivity implements SubscriptionListF
 
     private void connect() {
         setSubtitle(getString(R.string.connecting));
-        MqttConnectOptions options = new MqttConnectOptions();
-        options.setCleanSession(mConnection.isCleanSession());
-        mMQTTManager.connect(mClient,options);
+        mMQTTManager.connect(mClient, mConnection.getMqttConnectOptions());
     }
 
     private void subscribe(Subscription subscription) {

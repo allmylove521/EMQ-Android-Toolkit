@@ -11,12 +11,14 @@ import android.widget.Switch;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.emqtt.emqandroidtoolkit.R;
 import io.emqtt.emqandroidtoolkit.model.Connection;
 import io.emqtt.emqandroidtoolkit.ui.base.ToolBarActivity;
+import io.emqtt.emqandroidtoolkit.ui.widget.QoSChooseLayout;
 import io.emqtt.emqandroidtoolkit.util.RealmHelper;
 import io.emqtt.emqandroidtoolkit.util.TipUtil;
 import io.realm.Realm;
@@ -39,6 +41,12 @@ public class ConnectionActivity extends ToolBarActivity {
     @BindView(R.id.username) EditText mUsername;
     @BindView(R.id.password) EditText mPassword;
     @BindView(R.id.operate_connection) Button mOperateConnectionButton;
+    @BindView(R.id.timeout) EditText mTimeout;
+    @BindView(R.id.keepalive) EditText mKeepAlive;
+    @BindView(R.id.lw_topic) EditText mTopic;
+    @BindView(R.id.lw_payload) EditText mPayload;
+    @BindView(R.id.lw_qos) QoSChooseLayout mQos;
+    @BindView(R.id.lw_retained) Switch mRetained;
 
     private int mMode;
 
@@ -160,24 +168,51 @@ public class ConnectionActivity extends ToolBarActivity {
         mCleanSession.setChecked(connection.isCleanSession());
         mUsername.setText(connection.getUsername());
         mPassword.setText(connection.getPassword());
+        mTimeout.setText(String.format(Locale.getDefault(),"%d",connection.getTimeout()));
+        mKeepAlive.setText(String.format(Locale.getDefault(),"%d",connection.getKeepAlive()));
+        mTopic.setText(connection.getLwtTopic());
+        mPayload.setText(connection.getLwtPayload());
+        mQos.setQoS(connection.getLwtQos());
+
     }
 
 
     private void updateConnection(Connection connection) {
-        String host = mHost.getText().toString().trim();
-        String port = mPort.getText().toString().trim();
-        String clientId = mClientId.getText().toString().trim();
-        boolean cleanSession = mCleanSession.isChecked();
-        String username = mUsername.getText().toString().trim();
-        String password = mPassword.getText().toString().trim();
+        String host = getString(mHost);
+        String port = getString(mPort);
+        String clientId = getString(mClientId);
 
-        connection.setHost(host);
-        connection.setPort(port);
-        connection.setClientId(clientId);
+        boolean cleanSession = mCleanSession.isChecked();
+        String username = getString(mUsername);
+        String password = getString(mPassword);
+
+        String topic = getString(mTopic);
+        String payload = getString(mPayload);
+        int qos = mQos.getQoS();
+        boolean retained = mRetained.isChecked();
+
+        connection.setClientInfo(host,port,clientId);
+
         connection.setCleanSession(cleanSession);
+
         connection.setUsername(username);
         connection.setPassword(password);
-        connection.generateId();
+
+        if (getString(mTimeout).length() > 0) {
+            connection.setTimeout(Integer.parseInt(getString(mTimeout)));
+        }
+
+        if (getString(mKeepAlive).length()>0){
+            connection.setKeepAlive(Integer.parseInt(getString(mKeepAlive)));
+        }
+
+        connection.setWill(topic, payload, qos, retained);
+
+    }
+
+
+    private String getString(EditText editText){
+        return editText.getText().toString().trim();
     }
 
 
@@ -189,7 +224,7 @@ public class ConnectionActivity extends ToolBarActivity {
      * Validate a URI
      */
 
-    public static boolean validateURI(String srvURI) {
+    private boolean validateURI(String srvURI) {
         try {
             URI vURI = new URI(srvURI);
             if (vURI.getScheme().equals("ws")) {
