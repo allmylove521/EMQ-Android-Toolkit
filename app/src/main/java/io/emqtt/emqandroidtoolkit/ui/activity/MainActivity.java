@@ -63,7 +63,7 @@ public class MainActivity extends BaseActivity {
         mConnectionAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemEdit(int position, Object item) {
-                ConnectionActivity.openActivityForResult(MainActivity.this, ConnectionActivity.MODE_EDIT, REQUEST_EDIT, (Connection) item);
+                ConnectionActivity.openActivityForResult(MainActivity.this, REQUEST_EDIT, (Connection) item);
                 mPosition = position;
 
             }
@@ -122,7 +122,7 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.fab)
     public void onClick() {
-        ConnectionActivity.openActivityForResult(this, ConnectionActivity.MODE_ADD, REQUEST_ADD);
+        ConnectionActivity.openActivityForResult(this, REQUEST_ADD);
     }
 
     @Override

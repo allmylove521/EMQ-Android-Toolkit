@@ -14,15 +14,13 @@
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/space_middle"
-                android:paddingEnd="@dimen/space_middle"
-                android:paddingTop="@dimen/space_middle"
+                android:padding="@dimen/space_middle"
                 android:orientation="vertical">
 
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/colorAccent"
                     android:text="@string/general"/>
 
@@ -71,7 +69,7 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/colorAccent"
                     android:text="@string/advanced"/>
 
@@ -123,7 +121,7 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/colorAccent"
                     android:text="@string/last_will"/>
 
@@ -161,12 +159,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/retained"/>
 
-            <Button android:id="@+id/operate_connection"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/space_middle"
-                    android:text="@string/add_connection"/>
+
         </LinearLayout>
     </ScrollView>
 

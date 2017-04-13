@@ -3,8 +3,8 @@ package io.emqtt.emqandroidtoolkit.ui.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.IntDef;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -14,7 +14,6 @@ import java.net.URISyntaxException;
 import java.util.Locale;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 import io.emqtt.emqandroidtoolkit.R;
 import io.emqtt.emqandroidtoolkit.model.Connection;
 import io.emqtt.emqandroidtoolkit.ui.base.ToolBarActivity;
@@ -26,11 +25,7 @@ import io.realm.Realm;
 
 public class ConnectionActivity extends ToolBarActivity {
 
-    private static final String EXTRA_MODE = "mode";
     public static final String EXTRA_CONNECTION = "connection";
-
-    public static final int MODE_ADD = 0;
-    public static final int MODE_EDIT = 1;
 
 
     @BindView(R.id.linear_layout) LinearLayout mLinearLayout;
@@ -40,7 +35,6 @@ public class ConnectionActivity extends ToolBarActivity {
     @BindView(R.id.clean_session) Switch mCleanSession;
     @BindView(R.id.username) EditText mUsername;
     @BindView(R.id.password) EditText mPassword;
-    @BindView(R.id.operate_connection) Button mOperateConnectionButton;
     @BindView(R.id.timeout) EditText mTimeout;
     @BindView(R.id.keepalive) EditText mKeepAlive;
     @BindView(R.id.lw_topic) EditText mTopic;
@@ -48,26 +42,18 @@ public class ConnectionActivity extends ToolBarActivity {
     @BindView(R.id.lw_qos) QoSChooseLayout mQos;
     @BindView(R.id.lw_retained) Switch mRetained;
 
-    private int mMode;
-
-    private String mId;
 
     private Connection mConnection;
 
-    @IntDef({MODE_ADD, MODE_EDIT})
-    @interface mode {
+    private boolean mIsNew = true;
 
+
+    public static void openActivityForResult(Context context, int requestCode) {
+        openActivityForResult(context, requestCode, null);
     }
 
-
-    public static void openActivityForResult(Context context, @mode int mode, int requestCode) {
-        openActivityForResult(context, mode, requestCode, null);
-
-    }
-
-    public static void openActivityForResult(Context context, @mode int mode, int requestCode, Connection connection) {
+    public static void openActivityForResult(Context context, int requestCode, Connection connection) {
         Intent intent = new Intent(context, ConnectionActivity.class);
-        intent.putExtra(EXTRA_MODE, mode);
         if (null != connection) {
             intent.putExtra(EXTRA_CONNECTION, connection);
         }
@@ -83,20 +69,16 @@ public class ConnectionActivity extends ToolBarActivity {
     @Override
     protected void setUpView() {
 
-        mMode = getIntent().getIntExtra(EXTRA_MODE, MODE_ADD);
-        if (isAddMode()) {
-            mOperateConnectionButton.setText(R.string.add_connection);
-            mClientId.setText(getRandomClientId());
-        } else {
-            mOperateConnectionButton.setText(R.string.save_connection);
+        if (getIntent().getParcelableExtra(EXTRA_CONNECTION) != null) {
             Connection connection = getIntent().getParcelableExtra(EXTRA_CONNECTION);
-            mId = connection.getId();
+            String id = connection.getId();
             Realm realm = RealmHelper.getInstance().getRealm();
-            mConnection = realm.where(Connection.class).equalTo("id", mId).findFirst();
+            mConnection = realm.where(Connection.class).equalTo("id", id).findFirst();
             setConnection(mConnection);
-
+            mIsNew = false;
+        } else {
+            mClientId.setText(getRandomClientId());
         }
-
 
     }
 
@@ -111,26 +93,42 @@ public class ConnectionActivity extends ToolBarActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_edit_connection,menu);
+        return true;
+    }
 
-    @OnClick(R.id.operate_connection)
-    public void onClick() {
 
-        if (mHost.getText().toString().isEmpty()) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_done) {
+            completeOperation();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void completeOperation(){
+        if (getString(mHost).isEmpty()) {
             TipUtil.showSnackbar(mLinearLayout, "Host cannot be empty");
             return;
         }
 
-        if (mClientId.getText().toString().isEmpty()) {
+        if (getString(mClientId).isEmpty()) {
             TipUtil.showSnackbar(mLinearLayout, "Client Id cannot be empty");
             return;
         }
 
-        if (mPort.getText().toString().isEmpty()) {
+        if (getString(mPort).isEmpty()) {
             TipUtil.showSnackbar(mLinearLayout, "Port cannot be empty");
             return;
         }
 
-        String srvURI = "tcp://" + mHost.getText().toString() + ":" + mPort.getText().toString();
+        String srvURI = "tcp://" + getString(mPort) + ":" + getString(mPort);
         try {
             validateURI(srvURI);
         } catch (IllegalArgumentException e) {
@@ -139,27 +137,26 @@ public class ConnectionActivity extends ToolBarActivity {
         }
 
 
-        if (!isAddMode()) {
+        if (mIsNew) {
+            mConnection = new Connection();
+            updateConnection(mConnection);
+            RealmHelper.getInstance().addData(mConnection);
+        } else {
             Realm realm = RealmHelper.getInstance().getRealm();
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
                     updateConnection(mConnection);
-
                 }
             });
-        } else {
-            mConnection = new Connection();
-            updateConnection(mConnection);
-            RealmHelper.getInstance().addData(mConnection);
         }
 
         Intent intent = new Intent();
         intent.putExtra(EXTRA_CONNECTION, mConnection);
         setResult(RESULT_OK, intent);
         finish();
-
     }
+
 
     private void setConnection(Connection connection) {
         mHost.setText(connection.getHost());
@@ -202,7 +199,7 @@ public class ConnectionActivity extends ToolBarActivity {
             connection.setTimeout(Integer.parseInt(getString(mTimeout)));
         }
 
-        if (getString(mKeepAlive).length()>0){
+        if (getString(mKeepAlive).length() > 0) {
             connection.setKeepAlive(Integer.parseInt(getString(mKeepAlive)));
         }
 
@@ -213,11 +210,6 @@ public class ConnectionActivity extends ToolBarActivity {
 
     private String getString(EditText editText){
         return editText.getText().toString().trim();
-    }
-
-
-    private boolean isAddMode() {
-        return mMode == MODE_ADD;
     }
 
     /**

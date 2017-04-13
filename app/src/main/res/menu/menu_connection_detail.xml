@@ -4,11 +4,11 @@
 
     <item android:id="@+id/action_connect"
           app:showAsAction="always"
-          android:title="Connect"/>
+          android:title="@string/connect"/>
 
     <item android:id="@+id/action_disconnect"
           app:showAsAction="ifRoom"
           android:visible="false"
-          android:title="Disconnect"/>
+          android:title="@string/disconnect"/>
 
 </menu>

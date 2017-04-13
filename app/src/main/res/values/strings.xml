@@ -12,6 +12,11 @@
     <string name="add_connection">Add</string>
     <string name="save_connection">Save</string>
     <string name="clean_session">Clean Session:</string>
+    <string name="timeout">Timeout</string>
+    <string name="keepalive">KeepAlive</string>
+    <string name="general">General</string>
+    <string name="advanced">Advanced</string>
+    <string name="last_will">Last Will and Testament</string>
 
     <!--operate connection-->
     <string name="edit">Edit</string>
@@ -43,11 +48,7 @@
     <string name="unsubscurbe_success">Unsubscribe success</string>
     <string name="unsubscirbe_fail">Unsubscribe fail</string>
     <string name="publish_fail">Publish fail</string>
-    <string name="timeout">Timeout</string>
-    <string name="keepalive">KeepAlive</string>
-    <string name="general">General</string>
-    <string name="advanced">Advanced</string>
-    <string name="last_will">Last Will and Testament</string>
+    <string name="done">Done</string>
 
 
 </resources>
