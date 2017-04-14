@@ -14,7 +14,6 @@ import butterknife.OnClick;
 import io.emqtt.emqandroidtoolkit.R;
 import io.emqtt.emqandroidtoolkit.model.Connection;
 import io.emqtt.emqandroidtoolkit.model.EmqMessage;
-import io.emqtt.emqandroidtoolkit.net.MQTTManager;
 import io.emqtt.emqandroidtoolkit.ui.OnItemClickListener;
 import io.emqtt.emqandroidtoolkit.ui.adapter.ConnectionAdapter;
 import io.emqtt.emqandroidtoolkit.ui.base.BaseActivity;
@@ -128,7 +127,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         RealmHelper.getInstance().deleteAll(EmqMessage.class);
-        MQTTManager.release();
+//        MQTTManager.release();
         super.onDestroy();
     }
 

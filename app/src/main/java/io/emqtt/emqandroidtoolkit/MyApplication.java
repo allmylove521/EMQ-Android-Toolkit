@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 
+import io.emqtt.emqandroidtoolkit.net.MQTTManager;
 import io.emqtt.emqandroidtoolkit.util.LogUtil;
 import io.realm.Realm;
 
@@ -80,5 +81,12 @@ public class MyApplication extends Application {
     public static Context getContext() {
         return sContext;
     }
+
+    @Override
+    public void onLowMemory() {
+        MQTTManager.release();
+        super.onLowMemory();
+    }
+
 
 }

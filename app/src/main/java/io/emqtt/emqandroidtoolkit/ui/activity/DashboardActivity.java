@@ -1,6 +1,6 @@
 package io.emqtt.emqandroidtoolkit.ui.activity;
 
-import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
+import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -58,7 +58,7 @@ public class DashboardActivity extends BaseActivity implements SubscriptionListF
     private Publication mPublication;
 
     private MQTTManager mMQTTManager;
-    private MqttAsyncClient mClient;
+    private MqttAndroidClient mClient;
     private ConnectionViewPagerAdapter mAdapter;
 
     private SubscriptionListFragment mSubscriptionListFragment;
@@ -244,6 +244,7 @@ public class DashboardActivity extends BaseActivity implements SubscriptionListF
                 break;
 
             case Constant.MQTTStatusConstant.CONNECT_FAIL:
+                TipUtil.showSnackbar(mCoordinatorLayout, event.getException().getMessage());
                 setSubtitle(getString(R.string.connect_fail));
                 break;
 
