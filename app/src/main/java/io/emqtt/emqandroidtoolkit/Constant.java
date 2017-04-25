@@ -8,7 +8,7 @@ package io.emqtt.emqandroidtoolkit;
 
 public class Constant {
 
-    public class ExtraConstant {
+    public static class ExtraConstant {
 
         public static final String EXTRA_CONNECTION = "connection";
 
@@ -22,7 +22,7 @@ public class Constant {
 
     }
 
-    public class MQTTStatusConstant {
+    public static class MQTTStatusConstant {
 
         public static final int CONNECT_SUCCESS = 100;
 

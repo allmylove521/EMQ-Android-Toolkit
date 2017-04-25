@@ -41,9 +41,6 @@ public class Connection extends RealmObject implements Parcelable {
     private int lwtQos;
 
     private boolean lwtRetained;
-    private String mHost;
-    private String mPort;
-    private String mClientId;
 
 
     public Connection() {

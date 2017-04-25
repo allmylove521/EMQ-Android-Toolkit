@@ -58,8 +58,7 @@ public class MQTTManager {
 
     public MqttAndroidClient createClient(String id, String serverURI, String clientId) {
         MqttClientPersistence mqttClientPersistence = new MemoryPersistence();
-        MqttAndroidClient client = null;
-        client = new MqttAndroidClient(MyApplication.getContext(), serverURI, clientId, mqttClientPersistence);
+        MqttAndroidClient client = new MqttAndroidClient(MyApplication.getContext(), serverURI, clientId, mqttClientPersistence);
         client.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {

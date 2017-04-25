@@ -2,6 +2,7 @@ package io.emqtt.emqandroidtoolkit.ui.base;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
 
 import butterknife.ButterKnife;
@@ -32,6 +33,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setUpData();
     }
 
+    @LayoutRes
     protected abstract int getLayoutResId();
 
     protected abstract void setUpView();

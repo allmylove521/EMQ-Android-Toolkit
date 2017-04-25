@@ -90,6 +90,8 @@ public class MainActivity extends BaseActivity {
                     case REQUEST_EDIT:
                         mConnectionAdapter.notifyItemChanged(mPosition);
                         break;
+                    default:
+                        break;
                 }
             }
 
