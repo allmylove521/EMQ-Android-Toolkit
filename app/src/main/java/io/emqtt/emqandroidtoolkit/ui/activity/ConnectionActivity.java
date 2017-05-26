@@ -1,6 +1,5 @@
 package io.emqtt.emqandroidtoolkit.ui.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.Menu;
@@ -48,16 +47,16 @@ public class ConnectionActivity extends ToolBarActivity {
     private boolean mIsNew = true;
 
 
-    public static void openActivityForResult(Context context, int requestCode) {
-        openActivityForResult(context, requestCode, null);
+    public static void openActivity(Context context) {
+        openActivity(context, null);
     }
 
-    public static void openActivityForResult(Context context, int requestCode, Connection connection) {
+    public static void openActivity(Context context, Connection connection) {
         Intent intent = new Intent(context, ConnectionActivity.class);
         if (null != connection) {
             intent.putExtra(EXTRA_CONNECTION, connection);
         }
-        ((Activity) context).startActivityForResult(intent, requestCode);
+        context.startActivity(intent);
 
     }
 
@@ -95,7 +94,7 @@ public class ConnectionActivity extends ToolBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_edit_connection,menu);
+        getMenuInflater().inflate(R.menu.menu_edit_connection, menu);
         return true;
     }
 
@@ -112,7 +111,7 @@ public class ConnectionActivity extends ToolBarActivity {
     }
 
 
-    private void completeOperation(){
+    private void completeOperation() {
         if (getString(mHost).isEmpty()) {
             TipUtil.showSnackbar(mLinearLayout, "Host cannot be empty");
             return;
@@ -151,9 +150,6 @@ public class ConnectionActivity extends ToolBarActivity {
             });
         }
 
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_CONNECTION, mConnection);
-        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -165,8 +161,8 @@ public class ConnectionActivity extends ToolBarActivity {
         mCleanSession.setChecked(connection.isCleanSession());
         mUsername.setText(connection.getUsername());
         mPassword.setText(connection.getPassword());
-        mTimeout.setText(String.format(Locale.getDefault(),"%d",connection.getTimeout()));
-        mKeepAlive.setText(String.format(Locale.getDefault(),"%d",connection.getKeepAlive()));
+        mTimeout.setText(String.format(Locale.getDefault(), "%d", connection.getTimeout()));
+        mKeepAlive.setText(String.format(Locale.getDefault(), "%d", connection.getKeepAlive()));
         mTopic.setText(connection.getLwtTopic());
         mPayload.setText(connection.getLwtPayload());
         mQos.setQoS(connection.getLwtQos());
@@ -188,7 +184,7 @@ public class ConnectionActivity extends ToolBarActivity {
         int qos = mQos.getQoS();
         boolean retained = mRetained.isChecked();
 
-        connection.setClientInfo(host,port,clientId);
+        connection.setClientInfo(host, port, clientId);
 
         connection.setCleanSession(cleanSession);
 
@@ -208,7 +204,7 @@ public class ConnectionActivity extends ToolBarActivity {
     }
 
 
-    private String getString(EditText editText){
+    private String getString(EditText editText) {
         return editText.getText().toString().trim();
     }
 

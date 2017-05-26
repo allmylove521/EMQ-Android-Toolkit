@@ -18,7 +18,7 @@ import io.emqtt.emqandroidtoolkit.R;
 import io.emqtt.emqandroidtoolkit.model.Connection;
 import io.emqtt.emqandroidtoolkit.model.Subscription;
 import io.emqtt.emqandroidtoolkit.net.MQTTManager;
-import io.emqtt.emqandroidtoolkit.ui.OnItemClickListener;
+import io.emqtt.emqandroidtoolkit.ui.activity.ConnectionActivity;
 import io.emqtt.emqandroidtoolkit.ui.activity.DashboardActivity;
 import io.emqtt.emqandroidtoolkit.util.RealmHelper;
 
@@ -32,15 +32,11 @@ public class ConnectionAdapter extends RecyclerView.Adapter<ConnectionAdapter.Co
 
     private List<Connection> mConnectionList;
     private Context mContext;
-    private OnItemClickListener mOnItemClickListener;
 
     public ConnectionAdapter(List<Connection> connectionList) {
         mConnectionList = connectionList;
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        mOnItemClickListener = onItemClickListener;
-    }
 
     @Override
     public ConnectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -82,9 +78,7 @@ public class ConnectionAdapter extends RecyclerView.Adapter<ConnectionAdapter.Co
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_edit:
-                        if (mOnItemClickListener != null) {
-                            mOnItemClickListener.onItemEdit(position, connection);
-                        }
+                        ConnectionActivity.openActivity(mContext, connection);
 
                         return true;
                     case R.id.action_delete:

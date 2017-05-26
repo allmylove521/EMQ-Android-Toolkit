@@ -39,7 +39,7 @@ public class MessageListActivity extends ToolBarActivity {
     private String mDeleteTime;
 
 
-    public static void openActivity(Context context, Subscription subscription){
+    public static void openActivity(Context context, Subscription subscription) {
         Intent intent = new Intent(context, MessageListActivity.class);
         intent.putExtra(Constant.ExtraConstant.EXTRA_SUBSCRIPTION, subscription);
         context.startActivity(intent);
@@ -90,7 +90,7 @@ public class MessageListActivity extends ToolBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_message_list,menu);
+        getMenuInflater().inflate(R.menu.menu_message_list, menu);
         return true;
     }
 
@@ -110,7 +110,7 @@ public class MessageListActivity extends ToolBarActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(MessageEvent event){
+    public void onEvent(MessageEvent event) {
         mAdapter.insertData(event.getMessage());
         RealmHelper.getInstance().addData(event.getMessage());
         mMessageRecyclerView.smoothScrollToPosition(mAdapter.getItemCount());

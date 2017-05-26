@@ -1,6 +1,5 @@
 package io.emqtt.emqandroidtoolkit.ui.activity;
 
-import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,20 +13,16 @@ import butterknife.OnClick;
 import io.emqtt.emqandroidtoolkit.R;
 import io.emqtt.emqandroidtoolkit.model.Connection;
 import io.emqtt.emqandroidtoolkit.model.EmqMessage;
-import io.emqtt.emqandroidtoolkit.ui.OnItemClickListener;
 import io.emqtt.emqandroidtoolkit.ui.adapter.ConnectionAdapter;
 import io.emqtt.emqandroidtoolkit.ui.base.BaseActivity;
 import io.emqtt.emqandroidtoolkit.ui.widget.RecyclerViewDivider;
 import io.emqtt.emqandroidtoolkit.util.RealmHelper;
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.RealmResults;
 
 
 public class MainActivity extends BaseActivity {
-
-    private static final int REQUEST_ADD = 123;
-
-    private static final int REQUEST_EDIT = 456;
-
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.connection) RecyclerView mConnectionRecyclerView;
@@ -35,7 +30,6 @@ public class MainActivity extends BaseActivity {
 
     private ConnectionAdapter mConnectionAdapter;
 
-    private int mPosition;
     private RealmResults<Connection> mConnectionResults;
 
     @Override
@@ -58,45 +52,34 @@ public class MainActivity extends BaseActivity {
 
         mConnectionResults = RealmHelper.getInstance().queryAll(Connection.class);
 
-        mConnectionAdapter = new ConnectionAdapter(mConnectionResults);
-        mConnectionAdapter.setOnItemClickListener(new OnItemClickListener() {
+        mConnectionResults.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Connection>>() {
             @Override
-            public void onItemEdit(int position, Object item) {
-                ConnectionActivity.openActivityForResult(MainActivity.this, REQUEST_EDIT, (Connection) item);
-                mPosition = position;
+            public void onChange(RealmResults<Connection> collection, OrderedCollectionChangeSet changeSet) {
+                if (changeSet == null) {
+                    mConnectionAdapter.notifyDataSetChanged();
+                    return;
+                }
 
-            }
+                OrderedCollectionChangeSet.Range[] insertions = changeSet.getInsertionRanges();
+                for (OrderedCollectionChangeSet.Range range : insertions) {
+                    mConnectionAdapter.notifyItemInserted(range.startIndex);
+                }
 
-            @Override
-            public void onItemDelete(int position, Object item) {
-//                RealmHelper.getInstance().delete(mConnectionResults.get(position));
+                OrderedCollectionChangeSet.Range[] modifications = changeSet.getChangeRanges();
+                for (OrderedCollectionChangeSet.Range range : modifications) {
+                    mConnectionAdapter.notifyItemChanged(range.startIndex);
+                }
+
 
             }
         });
+
+        mConnectionAdapter = new ConnectionAdapter(mConnectionResults);
 
         mConnectionRecyclerView.setAdapter(mConnectionAdapter);
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            Connection connection = data.getParcelableExtra(ConnectionActivity.EXTRA_CONNECTION);
-            if (null != connection) {
-                switch (requestCode) {
-                    case REQUEST_ADD:
-                        mConnectionAdapter.notifyItemInserted(mConnectionResults.size() - 1);
-                        break;
-                    case REQUEST_EDIT:
-                        mConnectionAdapter.notifyItemChanged(mPosition);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -123,13 +106,12 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.fab)
     public void onClick() {
-        ConnectionActivity.openActivityForResult(this, REQUEST_ADD);
+        ConnectionActivity.openActivity(this);
     }
 
     @Override
     protected void onDestroy() {
         RealmHelper.getInstance().deleteAll(EmqMessage.class);
-//        MQTTManager.release();
         super.onDestroy();
     }
 

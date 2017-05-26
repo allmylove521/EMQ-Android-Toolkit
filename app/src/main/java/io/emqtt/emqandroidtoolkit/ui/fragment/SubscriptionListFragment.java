@@ -43,8 +43,7 @@ public class SubscriptionListFragment extends BaseFragment {
     }
 
     public static SubscriptionListFragment newInstance() {
-        SubscriptionListFragment fragment = new SubscriptionListFragment();
-        return fragment;
+        return new SubscriptionListFragment();
     }
 
 
