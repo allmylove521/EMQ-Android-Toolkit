@@ -1,11 +1,5 @@
 package io.emqtt.emqandroidtoolkit.ui.activity;
 
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.MqttTopic;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
@@ -18,6 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.MqttTopic;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -222,7 +222,7 @@ public class DashboardActivity extends BaseActivity implements SubscriptionListF
         if (mCurrentMode == SUBSCRIPTION) {
 //            startActivityForResult(SubscriptionActivity.class, SUBSCRIPTION);
             SubscriptionFragment subscriptionFragment = new SubscriptionFragment();
-            subscriptionFragment.show(getFragmentManager(), "Subscription");
+            subscriptionFragment.show(getSupportFragmentManager(), "Subscription");
         } else if (mCurrentMode == PUBLICATION) {
             startActivityForResult(PublicationActivity.class, PUBLICATION);
         }
